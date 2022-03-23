@@ -1,18 +1,43 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <br />
+    <br />
+
+    <center>
+      <ul>
+        <li v-for="nesto in commits" v-bind:key="nesto.sha">
+          <router-link :to="'/commit/' + nesto.sha">{{
+            nesto.sha
+          }}</router-link>
+        </li>
+      </ul>
+    </center>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
-}
+  name: "Home",
+  data() {
+    return {
+      commits: [],
+    };
+  },
+
+  async mounted() {
+    let rezultat = await fetch(
+      "https://api.github.com/repos/vuejs/vue/commits"
+    );
+
+    let podaci = await rezultat.json();
+
+    for (let nesto of podaci) {
+      console.log(nesto.sha);
+    }
+
+    this.commits = podaci;
+  },
+};
 </script>
